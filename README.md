@@ -38,8 +38,8 @@ The MHS 3.5" display connects via the GPIO header:
 1. Clone or copy this project to your Pi:
    ```bash
    cd ~
-   git clone <repo-url> flight-tracker-pi
-   cd flight-tracker-pi
+   git clone https://github.com/videojedi/Flight-Tracker-Pi.git
+   cd Flight-Tracker-Pi
    ```
 
 2. Run the setup script:
