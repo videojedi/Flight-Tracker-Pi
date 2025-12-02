@@ -1,0 +1,81 @@
+# Flight Tracker Pi Configuration
+
+# Your location (latitude, longitude)
+location:
+  latitude: 51.8915 # Example: London
+  longitude: -0.7832
+  name: "Cublington"
+
+# Search radius for flights (in kilometers)
+flight_radius_km: 10
+
+# Display settings
+display:
+  spi_bus: 0
+  spi_device: 0
+  spi_speed_hz: 125000000  # 125 MHz
+  width: 480
+  height: 320
+  rotation: 0  # 0, 90, 180, or 270 degrees
+  mirror_hdmi: true  # Mirror display to HDMI output
+
+# Weather API (Open-Meteo - free, no API key required)
+weather:
+  update_interval_seconds: 900  # Update weather every 15 minutes
+
+# Flight update interval (FlightRadar24 rate limit friendly)
+flight_update_interval_seconds: 15
+
+# Watchlist - aircraft registrations to highlight (e.g. friend's plane, interesting aircraft)
+# These will be highlighted in a special color when detected
+# Format: registration: "description/name"
+watchlist:
+  # Celebrities & VIPs
+  G-BOAC: "Concorde"
+  G-CIVY: "BA A350"
+  G-SUGA: "Alan Sugar"
+  M-ANSL: "Nigel Mansell"
+  G-LCDH: "Lewis Hamilton"
+  N808T: "Tom Cruise"
+  N887WM: "Bill Gates"
+  N898TS: "Taylor Swift"
+  "28000": "Air Force One"
+  "29000": "Air Force One"
+
+  # Red Arrows
+  XX202: "Red 1"
+  XX295: "Red 2"
+  XX319: "Red 3"
+  XX278: "Red 4"
+  XX177: "Red 5"
+  XX221: "Red 6"
+  XX281: "Red 7"
+  XX219: "Red 8"
+  XX322: "Red 9"
+  XX239: "Red 10"
+  XX232: "Red 11"
+  XX242: "Red Arrows"
+  XX310: "Red Arrows"
+  XX321: "Red Arrows"
+  XX323: "Red Arrows"
+
+  # Battle of Britain Memorial Flight
+  PA474: "BBMF Lancaster"
+  LF363: "BBMF Hurricane"
+  PZ865: "BBMF Hurricane"
+  P7350: "BBMF Spitfire Mk IIa"
+  AB910: "BBMF Spitfire"
+  PM631: "BBMF Spitfire"
+
+  # Add your own tail numbers here, e.g.:
+  # N12345: "Friend's Cessna"
+
+# UI settings
+ui:
+  font_size_large: 48
+  font_size_medium: 24
+  font_size_small: 16
+  background_color: "#000000"
+  text_color: "#FFFFFF"
+  accent_color: "#00AAFF"
+  warning_color: "#FFAA00"
