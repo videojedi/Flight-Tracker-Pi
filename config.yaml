@@ -11,12 +11,8 @@ flight_radius_km: 10
 
 # Display settings
 display:
-  spi_bus: 0
-  spi_device: 0
-  spi_speed_hz: 125000000  # 125 MHz
   width: 480
   height: 320
-  rotation: 0  # 0, 90, 180, or 270 degrees
   mirror_hdmi: true  # Mirror display to HDMI output
 
 # Weather API (Open-Meteo - free, no API key required)

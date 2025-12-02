@@ -2,6 +2,16 @@
 
 A Raspberry Pi flight tracker that displays overhead aircraft information using FlightRadar24 data on an MHS 3.5" SPI display. When no flights are nearby, it shows the current time, date, and weather.
 
+## Features
+
+- Real-time flight tracking via FlightRadar24 public API
+- Weather display with multi-page cycling (Open-Meteo, no API key required)
+- Touch input to cycle between multiple nearby flights
+- Watchlist highlighting for specific aircraft (Red Arrows, BBMF, celebrities, etc.)
+- HDMI output mirroring with automatic resolution detection
+- Loading screen with IP address display
+- Configurable via YAML
+
 ## Hardware Requirements
 
 - **Raspberry Pi 1 Model B** (or newer)
@@ -21,7 +31,7 @@ The MHS 3.5" display connects via the GPIO header:
 | DC | GPIO 24 (Pin 18) | Data/Command |
 | SDI/MOSI | MOSI (Pin 19) | SPI Data |
 | SCK | SCLK (Pin 23) | SPI Clock |
-| LED | GPIO 18 (Pin 12) | Backlight |
+| LED | 3.3V | Backlight (always on) |
 
 ## Installation
 
@@ -62,10 +72,27 @@ location:
 # Search radius for flights (km)
 flight_radius_km: 50
 
-# Display rotation (0, 90, 180, 270)
+# Flight update interval (seconds)
+flight_update_interval_seconds: 15
+
+# Display settings
 display:
-  rotation: 0
+  width: 480
+  height: 320
+  mirror_hdmi: true    # Mirror display to HDMI output
+
+# Watchlist - aircraft registrations to highlight
+watchlist:
+  G-ABCD: "Friend's Plane"
+  XX202: "Red 1"
 ```
+
+### Watchlist
+
+The watchlist highlights specific aircraft with a magenta colour scheme when detected. Includes support for:
+- Custom aircraft names/descriptions
+- Case-insensitive registration matching
+- Pre-configured entries for Red Arrows and BBMF aircraft
 
 ## Usage
 
@@ -95,26 +122,33 @@ journalctl -u flight-tracker -f
 
 ## Display Screens
 
+### Loading Screen
+Shown during startup:
+- Flight Tracker Pi logo with radar rings
+- Status messages (Initializing, Fetching weather, etc.)
+- IP address in bottom right corner
+
 ### Flight Screen
 When aircraft are detected nearby:
 - Flight number and airline
-- Route (origin → destination)
+- Route (origin → destination) with city names
 - Altitude, speed, and heading
 - Distance from your location
 - Climbing/descending indicator
 - Aircraft type and registration
+- Watchlist highlighting (magenta theme with custom name banner)
+- Tap screen to cycle between multiple flights
 
 ### Idle Screen
-When no flights are nearby:
-- Current time (with seconds)
-- Date
-- Outside temperature
-- Weather conditions
-- Location name
+When no flights are nearby (auto-cycles through 3 pages):
+- **Page 1**: Time, date, temperature, feels like, wind, humidity
+- **Page 2**: Temperature, high/low, precipitation, pressure
+- **Page 3**: Temperature, wind gusts, sunrise/sunset times
+- Location name and page indicator
 
 ## APIs Used
 
-- **FlightRadar24** - Real-time flight tracking data
+- **FlightRadar24** - Real-time flight tracking data (public feed, no API key required)
 - **Open-Meteo** - Weather data (free, no API key required)
 
 ## Troubleshooting
@@ -130,7 +164,12 @@ When no flights are nearby:
 3. Check internet connectivity
 
 ### Weather not updating
-- Open-Meteo is free but rate-limited; data updates every 10 minutes by default
+- Open-Meteo is free but rate-limited; data updates every 15 minutes by default
+
+### HDMI not mirroring
+1. Check `mirror_hdmi: true` in config.yaml
+2. Ensure HDMI is connected before starting the application
+3. The display auto-detects resolution and bit depth
 
 ## Project Structure
 
@@ -141,19 +180,22 @@ flight-tracker-pi/
 ├── requirements.txt     # Python dependencies
 ├── setup.sh             # Installation script
 └── src/
-    ├── display.py       # MHS 3.5" SPI display driver
+    ├── display.py       # MHS 3.5" display driver + HDMI mirroring
     ├── flight_tracker.py# FlightRadar24 API client
     ├── weather.py       # Open-Meteo weather client
-    └── ui.py            # UI screens and rendering
+    ├── airports.py      # IATA airport code lookup
+    ├── touch.py         # Touch input handler
+    └── ui.py            # UI screens (Loading, Flight, Idle)
 ```
 
 ## Performance Notes
 
-The Raspberry Pi 1 Model B has limited resources. The application is optimized for:
-- Minimal CPU usage (0.5s refresh rate)
+The Raspberry Pi 1 Model B has limited resources. The application is optimised for:
+- Minimal CPU usage (1s refresh rate)
 - Efficient SPI transfers at 125MHz
-- Cached weather data (10-minute intervals)
-- Batched flight API requests (5-second intervals)
+- Cached weather data (15-minute intervals)
+- Batched flight API requests (15-second intervals)
+- NumPy-accelerated framebuffer conversion (when available)
 
 ## License
 

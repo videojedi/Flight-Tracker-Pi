@@ -28,12 +28,8 @@ class FlightTrackerApp:
         # Initialize display
         display_config = self.config.get('display', {})
         self.display = MHS35Display(
-            spi_bus=display_config.get('spi_bus', 0),
-            spi_device=display_config.get('spi_device', 0),
-            spi_speed_hz=display_config.get('spi_speed_hz', 125000000),
             width=display_config.get('width', 480),
             height=display_config.get('height', 320),
-            rotation=display_config.get('rotation', 0),
             mirror_hdmi=display_config.get('mirror_hdmi', True)
         )
         self.renderer = DisplayRenderer(self.display)

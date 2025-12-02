@@ -220,10 +220,6 @@ class MHS35Display:
         """Get the PIL Image buffer"""
         return self.buffer
 
-    def set_backlight(self, on):
-        """Control backlight - not supported in framebuffer mode"""
-        pass
-
     def cleanup(self):
         """Cleanup resources"""
         # Clear screen on exit
